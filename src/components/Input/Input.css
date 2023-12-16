@@ -1,0 +1,7 @@
+.inputComp {
+  /* border: 1px solid grey; */
+  width: 100%;
+  max-width: 850px;
+  height: 40px;
+  border-radius: 16px;
+}

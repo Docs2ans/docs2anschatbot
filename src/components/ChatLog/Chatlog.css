@@ -1,0 +1,28 @@
+::-webkit-scrollbar {
+  width: 10px;
+  background: white;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: white;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  /* background: #888; */
+  background: white;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  /* background: #555; */
+  background: white;
+}
+
+.chatLog {
+  /* background-color: yellow; */
+  overflow-y: scroll;
+  min-width: 100%;
+  min-width: 100%;
+}
