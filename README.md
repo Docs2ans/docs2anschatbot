@@ -1,4 +1,4 @@
-# React component library template/boilerplate
+<!-- # React component library template/boilerplate
 
 Template and quick-starter to create your own modern React library includes awesome features and bandled using Rollup. 
 
@@ -87,4 +87,4 @@ npm publish
 
 ## License
 
-[MIT](LICENSE).
+[MIT](LICENSE). -->
