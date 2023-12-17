@@ -21,11 +21,9 @@
   "author": "Suyash",
   "license": "MIT",
   "keywords": [
-    "react-template",
     "react-library",
     "typescript",
-    "react",
-    "template"
+    "react"
   ],
   "bugs": {
     "url": "https://github.com/Docs2ans/docs2anschatbot/issues"

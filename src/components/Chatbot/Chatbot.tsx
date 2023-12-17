@@ -6,8 +6,12 @@ import Input from "../Input";
 import Chatlog from "../ChatLog/chatLog";
 import { ChatContext } from "../../context/context";
 // dimport { ChatContext } from "../../context/context";
+enum TypeMessage {
+  "question",
+  "answer",
+}
 export interface Chat {
-  // user: string;
+  type: string;
   answer: string;
 }
 export default function ChatBot() {
@@ -16,23 +20,26 @@ export default function ChatBot() {
   const [query, setQuery] = useState<string>("");
   const [queryPer, setQueryPer] = useState<boolean>(true);
   // const chat = useContext(ChatContext);
+
   const queryUpdater = () => {
-    console.log("hello");
-    setChat((chat) => [...chat, { answer: query }]);
+    setChat((chat) => [...chat, { answer: query, type: "query" }]);
+
     setQueryPer(!queryPer);
-    console.log(queryPer);
     setTimeout(() => {
       setChat((chat) => [
         ...chat,
         {
+          type: "answer",
           answer:
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum suscipit turpis sed neque vulputate, ut rutrum turpis sodales. Fusce dignissim metus massa, ac tempor lectus vehicula vel. Fusce gravida pellentesque nisi, eget sagittis magna pretium gravida. Ut sollicitudin nunc non lectus facilisis sollicitudin. Maecenas aliquet quis felis eget sollicitudin. Phasellus vel eleifend ligula. Quisque bibendum luctus vulputate. Phasellus a blandit lorem. Vestibulum a augue nisl. Aliquam erat volutpat.s",
         },
       ]);
       setQueryPer(!queryPer);
+
       return 0;
     }, 2000);
     setQuery("");
+    console.log(scrollbars,);
   };
   return (
     <ChatContext.Provider value={chat}>
@@ -79,7 +86,6 @@ export default function ChatBot() {
                 value={query}
                 onChange={(e) => {
                   e.preventDefault();
-                  console.log("helow");
                   setQuery(e.target.value);
                 }}
                 onKeyDown={(e) => {

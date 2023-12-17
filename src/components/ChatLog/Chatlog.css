@@ -21,8 +21,15 @@
 }
 
 .chatLog {
-  /* background-color: yellow; */
+  text-align: left;
   overflow-y: scroll;
-  min-width: 100%;
-  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chatLog li {
+  max-width: fit-content;
+  /* color: blue; */
+  text-align: left;
 }
