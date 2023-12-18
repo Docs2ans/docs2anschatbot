@@ -1,7 +1,7 @@
 {
   "name": "docs2anschatbot",
-  "version": "1.3.0",
-  "description": "An Chatbot for docs2ans.",
+  "version": "1.14.0",
+  "description": "A Chatbot for docs2ans.",
   "main": "dist/cjs/bundle.js",
   "module": "dist/esm/bundle.js",
   "types": "dist/index.d.ts",
