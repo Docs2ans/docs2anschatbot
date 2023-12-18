@@ -1,12 +1,19 @@
-import { createContext, useContext, useState } from "react";
+import React, {
+  HtmlHTMLAttributes,
+  createContext,
+  useContext,
+  useState,
+} from "react";
 import { Chat } from "../Chatbot/Chatbot";
 import { ChatContext } from "../../context/context";
 import "./Chatlog.css";
-export default function Chatlog() {
+
+export interface ButtonProps extends HtmlHTMLAttributes<HTMLDivElement> {}
+
+export default function Chatlog({ ...others }: ButtonProps) {
   const chatLog = useContext(ChatContext);
   const [chat, setChat] = useState<Array<Chat>>(chatLog);
   const [activeId, setactiveId] = useState(Chatlog.length);
-  //   console.log("hellow");
   return (
     <>
       <div className="chatLog">
@@ -15,7 +22,7 @@ export default function Chatlog() {
             if (data.type === "query") {
               return (
                 <li
-                  id={`${index}`}
+                  id={`chatElement${index}`}
                   style={{
                     listStyleType: "none",
                   }}

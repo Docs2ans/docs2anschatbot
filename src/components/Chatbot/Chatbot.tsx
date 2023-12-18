@@ -1,10 +1,12 @@
-import React, { useContext } from "react";
+import React, { Children, useContext } from "react";
 import { useState } from "react";
 import Button from "../Button";
 import "./Chatbot.css";
 import Input from "../Input";
 import Chatlog from "../ChatLog/chatLog";
 import { ChatContext } from "../../context/context";
+import Interceptor from "../../api/interceptor";
+
 // dimport { ChatContext } from "../../context/context";
 enum TypeMessage {
   "question",
@@ -19,12 +21,12 @@ export default function ChatBot() {
   const [chat, setChat] = useState<Array<Chat>>([]);
   const [query, setQuery] = useState<string>("");
   const [queryPer, setQueryPer] = useState<boolean>(true);
+
   // const chat = useContext(ChatContext);
-
-  const queryUpdater = () => {
+  const queryUpdater = async () => {
     setChat((chat) => [...chat, { answer: query, type: "query" }]);
-
     setQueryPer(!queryPer);
+    const res = await Interceptor(query);
     setTimeout(() => {
       setChat((chat) => [
         ...chat,
@@ -35,11 +37,10 @@ export default function ChatBot() {
         },
       ]);
       setQueryPer(!queryPer);
-
       return 0;
     }, 2000);
+
     setQuery("");
-    console.log(scrollbars,);
   };
   return (
     <ChatContext.Provider value={chat}>
@@ -51,10 +52,15 @@ export default function ChatBot() {
             // console.log(modal);
           }}
         ></Button>
-        {/* {modal} */}
         <dialog open={modal}>
           <div className="mainComp">
-            <div className="description">
+            <div
+              className="description"
+              onScroll={(e) => {
+                console.log(e);
+                scroll(100, 0);
+              }}
+            >
               {chat.length > 0 ? (
                 <h2>{chat[0].answer}</h2>
               ) : (
@@ -70,14 +76,18 @@ export default function ChatBot() {
                 X
               </h2>
             </div>
-            <div className="chatlogComp">
-              {/* <ul style={{ listStyleType: "none" }}>
-                {chat &&
-                  chat.map((data, index) => {
-                    return <li key={index}>{data.answer}</li>;
-                  })}
-              </ul> */}
-              <Chatlog />
+            <div
+              className="chatlogComp"
+              onScroll={(e) => {
+                console.log(e);
+              }}
+            >
+              <Chatlog
+                onClick={(e) => {
+                  console.log("helolow");
+                  scroll(100, 0);
+                }}
+              />
             </div>
             <div className="inputComp">
               <Input
@@ -94,7 +104,6 @@ export default function ChatBot() {
                   }
                 }}
               />
-              {/* <Button label="Submit" /> */}
             </div>
           </div>
         </dialog>
