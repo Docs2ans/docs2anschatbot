@@ -15,6 +15,7 @@ export interface Chat {
   type: string;
   answer: string;
 }
+export interface Res { res: string }
 export default function ChatBot() {
   const [modal, setModal] = useState<boolean>(true);
   const [chat, setChat] = useState<Array<Chat>>([]);
@@ -25,30 +26,35 @@ export default function ChatBot() {
   const queryUpdater = async () => {
     setChat((chat) => [...chat, { answer: query, type: "query" }]);
     setQueryPer(!queryPer);
-
+    const bd = { query: query }
+    console.log(JSON.stringify(bd))
     try {
       const res = await fetch("http://localhost:8000/", {
         method: "post",
-        body: query,
-      }).then((data) => {
-        console.log(data.json().then(data=>{
-          console.log(data)
-        }));
-      });
+        body: JSON.stringify(bd),
+        headers: {
+          "Content-type": "application/json"
+        }
+      })
+      // const answer = await res.json().then((data) => {
+      //   return data.res
+      // })
+      const z = JSON.parse(await res.json())
+      console.log()
       // const z =res.body
 
-      // if (res.ok) {
-      //   console.log(res.body);
-      //   setChat((chat) => [
-      //     ...chat,
-      //     {
-      //       type: "answer",
-      //       answer: `lorem ipsom Dropdown`,
-      //     },
-      //   ]);
-      // }
+      if (res.ok) {
+        console.log(res.body);
+        setChat((chat) => [
+          ...chat,
+          {
+            type: "answer",
+            answer: `${z.res}`,
+          },
+        ]);
+      }
       setQueryPer(!queryPer);
-    } catch (error) {}
+    } catch (error) { }
 
     setQuery("");
   };
