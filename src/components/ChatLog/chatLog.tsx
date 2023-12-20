@@ -1,22 +1,24 @@
-import React, {
-  HtmlHTMLAttributes,
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import React, { HtmlHTMLAttributes, useContext } from "react";
 import { Chat } from "../Chatbot/Chatbot";
 import { ChatContext } from "../../context/context";
 import "./Chatlog.css";
+import Typewriter from "react-ts-typewriter";
 
-export interface ButtonProps extends HtmlHTMLAttributes<HTMLDivElement> {}
-
-export default function Chatlog({ ...others }: ButtonProps) {
-  const chatLog = useContext(ChatContext);
-  const [chat, setChat] = useState<Array<Chat>>(chatLog);
-  const [activeId, setactiveId] = useState(Chatlog.length);
+export default function Chatlog({
+  ...others
+}: HtmlHTMLAttributes<HTMLDivElement>) {
+  const chatLog = useContext<Array<Chat>>(ChatContext);
   return (
     <>
-      <div className="chatLog">
+      <div
+        className="chatLog"
+        onScroll={(e) => {
+          console.log(e);
+        }}
+        onScrollCapture={(e) => {
+          console.log(e);
+        }}
+      >
         {chatLog &&
           chatLog.map((data, index) => {
             if (data.type === "query") {
@@ -28,7 +30,7 @@ export default function Chatlog({ ...others }: ButtonProps) {
                   }}
                   key={index}
                 >
-                  {data.answer}
+                  <Typewriter text={data.answer} speed={80} cursor={false} />
                 </li>
               );
             }
@@ -41,8 +43,9 @@ export default function Chatlog({ ...others }: ButtonProps) {
                   padding: "16px",
                 }}
                 key={index}
+                id={`chatElement${index}`}
               >
-                {data.answer}
+                <Typewriter text={data.answer} speed={8} cursor={false} />
               </li>
             );
           })}

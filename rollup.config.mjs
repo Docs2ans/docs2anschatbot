@@ -7,6 +7,7 @@ import dts from "rollup-plugin-dts";
 import postcss from "rollup-plugin-postcss";
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import pkg from "./package.json" assert { type: 'json' };
+import dotenv from "rollup-plugin-dotenv"
 
 export default [
 	{
@@ -36,7 +37,9 @@ export default [
 			commonjs(),
 			typescript({ tsconfig: "./tsconfig.json" }),
 			postcss(),
-			terser()
+			terser(),
+			dotenv()
+	
 		]
 	},
 	{

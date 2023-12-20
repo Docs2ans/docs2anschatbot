@@ -1,62 +1,68 @@
-import React, { Children, useContext } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Button from "../Button";
 import "./Chatbot.css";
 import Input from "../Input";
 import Chatlog from "../ChatLog/chatLog";
 import { ChatContext } from "../../context/context";
+import Interceptor from "../../api/interceptor";
 
-// dimport { ChatContext } from "../../context/context";
-enum TypeMessage {
-  "question",
-  "answer",
-}
 export interface Chat {
   type: string;
   answer: string;
 }
-export interface Res { res: string }
+export interface Res {
+  res: string;
+}
 export default function ChatBot() {
   const [modal, setModal] = useState<boolean>(true);
   const [chat, setChat] = useState<Array<Chat>>([]);
   const [query, setQuery] = useState<string>("");
-  const [queryPer, setQueryPer] = useState<boolean>(true);
+  const [queryPer, setQueryPer] = useState<boolean>(false);
 
-  // const chat = useContext(ChatContext);
   const queryUpdater = async () => {
     setChat((chat) => [...chat, { answer: query, type: "query" }]);
-    setQueryPer(!queryPer);
-    const bd = { query: query }
-    console.log(JSON.stringify(bd))
+    document.getElementById(`chatElement${chat.length}`)?.scrollIntoView(true);
+    setQueryPer(true);
     try {
-      const res = await fetch("http://localhost:8000/", {
+      setQuery("");
+      const res = await Interceptor({
+        body: query,
         method: "post",
-        body: JSON.stringify(bd),
-        headers: {
-          "Content-type": "application/json"
-        }
-      })
-      // const answer = await res.json().then((data) => {
-      //   return data.res
-      // })
-      const z = JSON.parse(await res.json())
-      console.log()
-      // const z =res.body
+      }).then(async (data) => {
+        return data;
+      });
+      const resAns = JSON.parse(
+        await res.json().then((data) => {
+          return data;
+        })
+      );
 
-      if (res.ok) {
-        console.log(res.body);
+      if (res.status === 200) {
         setChat((chat) => [
           ...chat,
           {
             type: "answer",
-            answer: `${z.res}`,
+            answer: `${resAns.res}`,
           },
         ]);
+        if (document.scrollingElement) {
+          const ram = document.getElementById(`chatElement${chat.length}`);
+          ram?.scrollIntoView(true);
+          console.log();
+          document
+            .getElementsByClassName("chatLog")[0]
+            ?.scroll(
+              0,
+              document.getElementsByClassName("chatLog")[0].scrollHeight + 10
+            );
+        }
+        setQueryPer(false);
       }
-      setQueryPer(!queryPer);
-    } catch (error) { }
-
-    setQuery("");
+    } catch (error) {
+      console.log(error);
+      setChat((chat) => chat.splice(chat.length));
+      setQueryPer(true);
+    }
   };
   return (
     <ChatContext.Provider value={chat}>
@@ -70,13 +76,7 @@ export default function ChatBot() {
         ></Button>
         <dialog open={modal}>
           <div className="mainComp">
-            <div
-              className="description"
-              onScroll={(e) => {
-                console.log(e);
-                scroll(100, 0);
-              }}
-            >
+            <div className="description">
               {chat.length > 0 ? (
                 <h2>{chat[0].answer}</h2>
               ) : (
@@ -98,16 +98,11 @@ export default function ChatBot() {
                 console.log(e);
               }}
             >
-              <Chatlog
-                onClick={(e) => {
-                  console.log("helolow");
-                  scroll(100, 0);
-                }}
-              />
+              <Chatlog />
             </div>
             <div className="inputComp">
               <Input
-                // disabled={queryPer}
+                disabled={queryPer}
                 type="text"
                 value={query}
                 onChange={(e) => {

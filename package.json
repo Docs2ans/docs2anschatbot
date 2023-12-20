@@ -49,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "babel-jest": "^29.5.0",
+    "dotenv": "^16.3.1",
     "eslint": "^8.38.0",
     "eslint-plugin-react": "^7.32.2",
     "gh-pages": "^5.0.0",
@@ -63,5 +64,9 @@
     "rollup-plugin-postcss": "^4.0.2",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "react-ts-typewriter": "^0.1.8-b",
+    "rollup-plugin-dotenv": "^0.5.0"
   }
 }
