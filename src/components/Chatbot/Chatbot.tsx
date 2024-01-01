@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { Component, HtmlHTMLAttributes, useState } from "react";
 import Button from "../Button";
 import "./Chatbot.css";
 import Input from "../Input";
 import Chatlog from "../ChatLog/chatLog";
-import { ChatContext } from "../../context/context";
+import { ApiContext, ChatContext } from "../../context/context";
 import Interceptor from "../../api/interceptor";
 
 export interface Chat {
@@ -13,12 +13,15 @@ export interface Chat {
 export interface Res {
   res: string;
 }
-export default function ChatBot() {
+interface inputProps extends React.ComponentProps<any> {
+  url: string;
+}
+function ChatBot({ url }: inputProps) {
   const [modal, setModal] = useState<boolean>(true);
   const [chat, setChat] = useState<Array<Chat>>([]);
   const [query, setQuery] = useState<string>("");
   const [queryPer, setQueryPer] = useState<boolean>(false);
-
+  console.log(url);
   const queryUpdater = async () => {
     setChat((chat) => [...chat, { answer: query, type: "query" }]);
     document.getElementById(`chatElement${chat.length}`)?.scrollIntoView(true);
@@ -26,6 +29,7 @@ export default function ChatBot() {
     try {
       setQuery("");
       const res = await Interceptor({
+        url: url,
         body: query,
         method: "post",
       }).then(async (data) => {
@@ -65,60 +69,64 @@ export default function ChatBot() {
     }
   };
   return (
-    <ChatContext.Provider value={chat}>
-      <>
-        <Button
-          label="open Dailog"
-          onClick={(e) => {
-            setModal(!modal);
-            // console.log(modal);
-          }}
-        ></Button>
-        <dialog open={modal}>
-          <div className="mainComp">
-            <div className="description">
-              {chat.length > 0 ? (
-                <h2>{chat[0].answer}</h2>
-              ) : (
-                <h2>Description</h2>
-              )}
+    <ApiContext.Provider value={url}>
+      <ChatContext.Provider value={chat}>
+        <>
+          <Button
+            label="open Dailog"
+            onClick={(e) => {
+              setModal(!modal);
+              // console.log(modal);
+            }}
+          ></Button>
+          <dialog open={modal}>
+            <div className="mainComp">
+              <div className="description">
+                {chat.length > 0 ? (
+                  <h2>{chat[0].answer}</h2>
+                ) : (
+                  <h2>Description</h2>
+                )}
 
-              <h2
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setModal(!modal);
+                <h2
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setModal(!modal);
+                  }}
+                >
+                  X
+                </h2>
+              </div>
+              <div
+                className="chatlogComp"
+                onScroll={(e) => {
+                  console.log(e);
                 }}
               >
-                X
-              </h2>
+                <Chatlog />
+              </div>
+              <div className="inputComp">
+                <Input
+                  disabled={queryPer}
+                  type="text"
+                  value={query}
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setQuery(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.code === "Enter") {
+                      queryUpdater();
+                    }
+                  }}
+                />
+              </div>
             </div>
-            <div
-              className="chatlogComp"
-              onScroll={(e) => {
-                console.log(e);
-              }}
-            >
-              <Chatlog />
-            </div>
-            <div className="inputComp">
-              <Input
-                disabled={queryPer}
-                type="text"
-                value={query}
-                onChange={(e) => {
-                  e.preventDefault();
-                  setQuery(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if (e.code === "Enter") {
-                    queryUpdater();
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </dialog>
-      </>
-    </ChatContext.Provider>
+          </dialog>
+        </>
+      </ChatContext.Provider>
+    </ApiContext.Provider>
   );
 }
+
+export default ChatBot;

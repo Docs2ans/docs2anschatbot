@@ -30,7 +30,6 @@
   },
   "homepage": "https://github.com/Docs2ans/docs2anschatbot.git",
   "peerDependencies": {
-    "antd": "^5.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
